@@ -97,11 +97,11 @@ export const googleCallback = async (req, res) => {
         generateToken(req.user._id, res);
         
         // Redirect to the OAuth success page, not the root
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const frontendUrl =  "http://localhost:5173";
         res.redirect(`${frontendUrl}/oauth-success`);
     } catch (error) {
         console.log("Error in googleCallback controller", error.message);
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const frontendUrl = "http://localhost:5173";
         res.redirect(`${frontendUrl}/login?error=server_error`);
     }
 };
