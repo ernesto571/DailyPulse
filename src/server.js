@@ -23,26 +23,30 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// ✅ IMPROVED CORS CONFIGURATION
 app.use(
   cors({
-    origin: "https://dailypulse-f8ra.onrender.com",
+    origin: "https://cruz-dailypulse.netlify.app" || "http://localhost:5173",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
-// ✅ Handle preflight requests
 app.options('*', cors());
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 
-// Start server
-app.listen(PORT, () => {
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    message: "Server is running",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
