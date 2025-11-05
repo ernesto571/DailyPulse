@@ -1,6 +1,8 @@
 import { generateToken } from "../lib/utils.js"
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
+import dotenv from "dotenv";
+dotenv.config();
 
 export const signup = async(req,res) =>{
     const {fullName, email, password}= req.body
@@ -89,19 +91,22 @@ export const checkAuth = async (req, res) => {
 
 export const googleCallback = async (req, res) => {
     try {
+        
         if (!req.user) {
-            return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
-        }
+            const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 
+            return res.redirect(`${frontendUrl}/login?error=auth_failed`);
+        }
         // Generate JWT token and set it as a cookie
         generateToken(req.user._id, res);
         
         // Redirect to the OAuth success page, not the root
-        const frontendUrl =  "http://localhost:5173";
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        console.log(frontendUrl)
         res.redirect(`${frontendUrl}/oauth-success`);
     } catch (error) {
         console.log("Error in googleCallback controller", error.message);
-        const frontendUrl = "http://localhost:5173";
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
         res.redirect(`${frontendUrl}/login?error=server_error`);
     }
 };
